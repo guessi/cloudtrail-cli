@@ -63,6 +63,12 @@ $ cloudtrail-cli --start-time 2023-02-01T00:00:00 --end-time 2023-02-01T01:00:00
 
 # Install
 
+### Homebrew
+
+```bash
+$ brew tap guessi/tap && brew install cloudtrail-cli
+```
+
 ### For Linux users
 
 ```bash
