@@ -8,16 +8,6 @@
 
 Blazing fast single purpose cli for CloudTrail log filtering, written in golang
 
-# Install
-
-Find the latest download URL from [release](https://github.com/guessi/cloudtrail-cli/releases) page.
-
-```bash
-$ curl ${DOWNLOAD_URL} -o ./cloudtrail-cli
-$ chmod +x ./cloudtrail-cli
-$ mv /usr/local/bin/cloudtrail-cli
-```
-
 # Usage
 
 ```bash
@@ -56,24 +46,43 @@ GLOBAL OPTIONS:
    --version, -v                  print the version
 ```
 
-### Sample Usage Case
+# Sample Output
 
 ```bash
-$ cloudtrail-cli --start-time 2023-02-01T00:00:00 --end-time 2023-02-01T01:00:00 --event-name AssumeRole --max-results 10 --region us-east-1 --read-only
+$ cloudtrail-cli --start-time 2023-02-01T00:00:00 --end-time 2023-02-01T01:00:00 --event-name AssumeRole --max-results 5 --region us-east-1 --read-only
 +--------------------------------------+------------+----------------------+----------+-------------------+-------------------------------+-------------------------------+-------------+-----------+----------+
 | EventId                              | EventName  | EventTime            | Username | EventSource       | UserAgent                     | SourceIPAddress               | AccessKeyId | ErrorCode | ReadOnly |
 +--------------------------------------+------------+----------------------+----------+-------------------+-------------------------------+-------------------------------+-------------+-----------+----------+
 | 998a47f3-fb53-48e0-83f1-111111111111 | AssumeRole | 2023-02-01T00:58:28Z | -        | sts.amazonaws.com | eks.amazonaws.com             | eks.amazonaws.com             |             |           | true     |
 | 56018bd8-d0f4-41d3-a718-111111111111 | AssumeRole | 2023-02-01T00:57:51Z | -        | sts.amazonaws.com | internetmonitor.amazonaws.com | internetmonitor.amazonaws.com |             |           | true     |
-| be8672c8-7725-4503-8a66-111111111111 | AssumeRole | 2023-02-01T00:56:31Z | -        | sts.amazonaws.com | eks.amazonaws.com             | eks.amazonaws.com             |             |           | true     |
 | d5f7ff3f-af90-4f05-9050-111111111111 | AssumeRole | 2023-02-01T00:55:22Z | -        | sts.amazonaws.com | ssm.amazonaws.com             | ssm.amazonaws.com             |             |           | true     |
-| 5aee1df5-d78d-4cac-bc20-111111111111 | AssumeRole | 2023-02-01T00:43:24Z | -        | sts.amazonaws.com | eks.amazonaws.com             | eks.amazonaws.com             |             |           | true     |
-| 1b10a941-ee4a-490a-bd5c-111111111111 | AssumeRole | 2023-02-01T00:41:25Z | -        | sts.amazonaws.com | eks.amazonaws.com             | eks.amazonaws.com             |             |           | true     |
 | 139dd66c-d192-47fc-9158-111111111111 | AssumeRole | 2023-02-01T00:40:38Z | -        | sts.amazonaws.com | lambda.amazonaws.com          | lambda.amazonaws.com          |             |           | true     |
-| 5b2e956f-b73c-49bd-8970-111111111111 | AssumeRole | 2023-02-01T00:40:21Z | -        | sts.amazonaws.com | ssm.amazonaws.com             | ssm.amazonaws.com             |             |           | true     |
-| faa2fd13-f9b9-4276-90fa-111111111111 | AssumeRole | 2023-02-01T00:39:16Z | -        | sts.amazonaws.com | eks.amazonaws.com             | eks.amazonaws.com             |             |           | true     |
 | 8af6dc45-fd58-4ad5-9e95-111111111111 | AssumeRole | 2023-02-01T00:35:06Z | -        | sts.amazonaws.com | lambda.amazonaws.com          | lambda.amazonaws.com          |             |           | true     |
 +--------------------------------------+------------+----------------------+----------+-------------------+-------------------------------+-------------------------------+-------------+-----------+----------+
+```
+
+# Install
+
+### For Linux users
+
+```bash
+$ curl -fsSL https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Linux-$(uname -m).tar.gz -o - | tar zxvf -
+$ mv ./cloudtrail-cli /usr/local/bin/cloudtrail-cli
+```
+
+### For macOS users
+
+```bash
+$ curl -fsSL https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Darwin-$(uname -m).tar.gz -o - | tar zxvf -
+$ mv ./cloudtrail-cli /usr/local/bin/cloudtrail-cli
+```
+
+### For Windows users
+
+```powershell
+PS> $SRC = 'https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Windows-x86_64.tar.gz'
+PS> $DST = 'C:\Temp\cloudtrail-cli-Windows-x86_64.tar.gz'
+PS> Invoke-RestMethod -Uri $SRC -OutFile $DST
 ```
 
 # License
