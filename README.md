@@ -69,6 +69,10 @@ $ cloudtrail-cli --start-time 2023-02-01T00:00:00 --end-time 2023-02-01T01:00:00
 $ brew tap guessi/tap && brew install cloudtrail-cli
 ```
 
+### For non-Homebrew users, click `Details` to view more methods.
+
+<details>
+
 ### For Linux users
 
 ```bash
@@ -90,6 +94,7 @@ PS> $SRC = 'https://github.com/guessi/cloudtrail-cli/releases/latest/download/cl
 PS> $DST = 'C:\Temp\cloudtrail-cli-Windows-x86_64.tar.gz'
 PS> Invoke-RestMethod -Uri $SRC -OutFile $DST
 ```
+</details>
 
 # License
 
