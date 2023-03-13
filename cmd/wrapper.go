@@ -19,5 +19,7 @@ func QueryHandlerWrapper(c *cli.Context) {
 		c.Bool("no-read-only"),
 		c.Int("max-results"),
 		c.Bool("error-only"),
+		c.Bool("truncate-user-name"),
+		c.Bool("truncate-user-agent"),
 	)
 }

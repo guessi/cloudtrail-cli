@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
@@ -14,6 +15,18 @@ import (
 func isValidUUID(u string) bool {
 	_, err := uuid.Parse(u)
 	return err == nil
+}
+
+func truncateString(truncate bool, input string, maxLength int) string {
+	if !truncate || len(input) < maxLength {
+		return input
+	}
+
+	if utf8.ValidString(input[:maxLength]) {
+		return input[:maxLength]
+	}
+
+	return input[:maxLength+1]
 }
 
 func getDisplayUserName(u types.UserIdentity) string {
@@ -32,7 +45,7 @@ func getDisplayUserName(u types.UserIdentity) string {
 }
 
 func getBatchSize(i int) *int32 {
-	var defaultBatchSize int = 50
+	const defaultBatchSize int = 50
 	var r int32
 	if i > 0 && i <= defaultBatchSize {
 		r = int32(i)

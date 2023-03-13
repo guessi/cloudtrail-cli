@@ -14,7 +14,7 @@ import (
 	"github.com/jedib0t/go-pretty/v6/text"
 )
 
-func EventsHandler(profile, region string, startTime, endTime *time.Time, eventId, eventName, eventSource, userName string, readOnly, noReadOnly bool, maxResults int, errorOnly bool) {
+func EventsHandler(profile, region string, startTime, endTime *time.Time, eventId, eventName, eventSource, userName string, readOnly, noReadOnly bool, maxResults int, errorOnly, truncateUserName, truncateUserAgent bool) {
 	// do nothing if maxResults is invalid input
 	if maxResults <= 0 {
 		log.Fatalf("Can not pass --max-results with a value lower or equal to 0.\n")
@@ -87,9 +87,9 @@ func EventsHandler(profile, region string, startTime, endTime *time.Time, eventI
 			c.EventId,
 			c.EventName,
 			c.EventTime,
-			username,
+			truncateString(truncateUserName, username, 24),
 			c.EventSource,
-			c.UserAgent,
+			truncateString(truncateUserAgent, c.UserAgent, 24),
 			c.SourceIPAddress,
 			c.UserIdentity.AccessKeyId,
 			c.ErrorCode,

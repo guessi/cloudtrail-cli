@@ -74,4 +74,16 @@ var Flags = []cli.Flag{
 		Usage:    "Filter events with errors",
 		Required: false,
 	},
+	&cli.BoolFlag{
+		Name:     "truncate-user-name",
+		Usage:    "Truncate user name string",
+		Value:    false,
+		Required: false,
+	},
+	&cli.BoolFlag{
+		Name:     "truncate-user-agent",
+		Usage:    "Truncate user agent string",
+		Value:    false,
+		Required: false,
+	},
 }
