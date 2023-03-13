@@ -44,13 +44,18 @@ var Flags = []cli.Flag{
 		Required: false,
 	},
 	&cli.StringFlag{
+		Name:     "user-name",
+		Usage:    "Filter events with user name",
+		Required: false,
+	},
+	&cli.StringFlag{
 		Name:     "event-source",
 		Usage:    "Filter events with event source",
 		Required: false,
 	},
 	&cli.StringFlag{
-		Name:     "user-name",
-		Usage:    "Filter events with user name",
+		Name:     "access-key-id",
+		Usage:    "Filter events with access key id",
 		Required: false,
 	},
 	&cli.BoolFlag{

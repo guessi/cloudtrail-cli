@@ -79,9 +79,10 @@ func LookupEvents(ctx context.Context, svc *cloudtrail.Client, input *cloudtrail
 	return events[:returnSize], nil
 }
 
-func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnly bool, eventSource, userName string) []ctypes.LookupAttribute {
+func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnly bool, userName, eventSource, accessKeyId string) []ctypes.LookupAttribute {
 	lookupAttributesInput := []ctypes.LookupAttribute{}
 
+	// LookupAttributeKeyEventId
 	if isValidUUID(eventId) {
 		attrEventId := ctypes.LookupAttribute{
 			AttributeKey:   ctypes.LookupAttributeKeyEventId,
@@ -90,6 +91,7 @@ func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnl
 		lookupAttributesInput = append(lookupAttributesInput, attrEventId)
 	}
 
+	// LookupAttributeKeyEventName
 	if len(eventName) > 0 {
 		attrEventName := ctypes.LookupAttribute{
 			AttributeKey:   ctypes.LookupAttributeKeyEventName,
@@ -98,6 +100,7 @@ func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnl
 		lookupAttributesInput = append(lookupAttributesInput, attrEventName)
 	}
 
+	// LookupAttributeKeyReadOnly
 	var shouldPassReadonly bool
 	var lookupAttributeKeyReadOnlyValue *string
 	if readOnly != noReadOnly {
@@ -117,6 +120,16 @@ func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnl
 		lookupAttributesInput = append(lookupAttributesInput, attrReadOnly)
 	}
 
+	// LookupAttributeKeyUsername
+	if len(userName) > 0 {
+		attrUserName := ctypes.LookupAttribute{
+			AttributeKey:   ctypes.LookupAttributeKeyUsername,
+			AttributeValue: aws.String(userName),
+		}
+		lookupAttributesInput = append(lookupAttributesInput, attrUserName)
+	}
+
+	// LookupAttributeKeyEventSource
 	const EVENT_SOURCE_SUFFIX = ".amazonaws.com"
 	if len(eventSource) > len(EVENT_SOURCE_SUFFIX) && strings.HasSuffix(eventSource, EVENT_SOURCE_SUFFIX) {
 		attrEventSource := ctypes.LookupAttribute{
@@ -126,12 +139,13 @@ func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnl
 		lookupAttributesInput = append(lookupAttributesInput, attrEventSource)
 	}
 
-	if len(userName) > 0 {
-		attrUserName := ctypes.LookupAttribute{
-			AttributeKey:   ctypes.LookupAttributeKeyUsername,
-			AttributeValue: aws.String(userName),
+	// LookupAttributeKeyAccessKeyId
+	if len(accessKeyId) == 20 {
+		attrAccessKeyId := ctypes.LookupAttribute{
+			AttributeKey:   ctypes.LookupAttributeKeyAccessKeyId,
+			AttributeValue: aws.String(accessKeyId),
 		}
-		lookupAttributesInput = append(lookupAttributesInput, attrUserName)
+		lookupAttributesInput = append(lookupAttributesInput, attrAccessKeyId)
 	}
 
 	return lookupAttributesInput
