@@ -22,3 +22,5 @@ releases/*
 
 # ignore binary output
 cloudtrail-cli
+cloudtrail-cli.exe
+*.tar.gz
