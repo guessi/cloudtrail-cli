@@ -12,7 +12,7 @@ Blazing fast single purpose cli for CloudTrail log filtering, written in golang
 
 ```bash
 $ cloudtrail-cli --version
-cloudtrail-cli version 1.0.1
+cloudtrail-cli version 1.0.2
 ```
 
 ```bash
@@ -24,7 +24,7 @@ USAGE:
    cloudtrail-cli [global options] command [command options] [arguments...]
 
 VERSION:
-   1.0.1
+   1.0.2
 
 COMMANDS:
    help, h  Shows a list of commands or help for one command
@@ -36,12 +36,15 @@ GLOBAL OPTIONS:
    --end-time value, -e value     Timestamp in 2023-01-01T00:00:00 format (UTC)
    --event-id value               Filter events with event id
    --event-name value             Filter events with event name
-   --event-source value           Filter events with event source
    --user-name value              Filter events with user name
+   --event-source value           Filter events with event source
+   --access-key-id value          Filter events with access key id
    --read-only                    Filter events with ReadOnly=true (default: false)
    --no-read-only                 Filter events with ReadOnly=false (default: false)
    --max-results value, -n value  (default: "20")
    --error-only                   Filter events with errors (default: false)
+   --truncate-user-name           Truncate user name string (default: false)
+   --truncate-user-agent          Truncate user agent string (default: false)
    --help, -h                     show help
    --version, -v                  print the version
 ```
