@@ -5,7 +5,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func QueryHandlerWrapper(c *cli.Context) {
+func Wrapper(c *cli.Context) {
 	utils.EventsHandler(
 		c.String("profile"),
 		c.String("region"),

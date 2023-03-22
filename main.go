@@ -15,7 +15,7 @@ func main() {
 		Version: constants.VERSION,
 		Flags:   cmd.Flags,
 		Action: func(c *cli.Context) error {
-			cmd.QueryHandlerWrapper(c)
+			cmd.Wrapper(c)
 			return nil
 		},
 	}
