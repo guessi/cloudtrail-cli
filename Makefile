@@ -8,7 +8,7 @@ default: build
 
 staticcheck:
 	@echo "Golang Staticcheck..."
-	@go install honnef.co/go/tools/cmd/staticcheck@2023.1.2
+	@go install honnef.co/go/tools/cmd/staticcheck@2023.1.3
 	@for i in $(PKGS); do echo $${i}; staticcheck $${i}; done
 
 test:
