@@ -1,3 +1,8 @@
+# v1.0.4 / 2023-08-08
+
+* Update staticcheck@2023.1.3
+* Dependencies update
+
 # v1.0.3 / 2023-05-12
 
 * Bump actions/setup-go@v4
