@@ -1,3 +1,7 @@
+# v1.0.5 / 2023-08-08
+
+* Identical with v1.0.4
+
 # v1.0.4 / 2023-08-08
 
 * Update staticcheck@2023.1.3
