@@ -7,8 +7,11 @@ LDFLAGS    := -s -w
 default: build
 
 staticcheck:
-	@echo "Golang Staticcheck..."
+	@echo "Setup staticcheck..."
 	@go install honnef.co/go/tools/cmd/staticcheck@2023.1.5
+	@echo "Check staticcheck version..."
+	staticcheck --version
+	@echo "Run staticcheck..."
 	@for i in $(PKGS); do echo $${i}; staticcheck $${i}; done
 
 test:
