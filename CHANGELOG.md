@@ -1,3 +1,8 @@
+# v1.0.6 / 2023-10-12
+
+* Biuld with golang 1.21
+* Dependencies update
+
 # v1.0.5 / 2023-08-08
 
 * Identical with v1.0.4
