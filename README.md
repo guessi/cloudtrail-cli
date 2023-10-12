@@ -12,7 +12,7 @@ Blazing fast single purpose cli for CloudTrail log filtering, written in golang
 
 ```bash
 $ cloudtrail-cli --version
-cloudtrail-cli version 1.0.5
+cloudtrail-cli version 1.0.7
 ```
 
 ```bash
@@ -24,7 +24,7 @@ USAGE:
    cloudtrail-cli [global options] command [command options] [arguments...]
 
 VERSION:
-   1.0.5
+   1.0.7
 
 COMMANDS:
    help, h  Shows a list of commands or help for one command

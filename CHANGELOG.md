@@ -1,3 +1,7 @@
+# v1.0.7 / 2023-10-12
+
+* Identical with v1.0.6
+
 # v1.0.6 / 2023-10-12
 
 * Biuld with golang 1.21
