@@ -1,3 +1,7 @@
+# v1.0.8 / 2023-11-20
+
+* Dependencies update
+
 # v1.0.7 / 2023-10-12
 
 * Identical with v1.0.6
