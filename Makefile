@@ -1,8 +1,11 @@
 .PHONY: staticcheck dependency clean build release all
 
 PKGS       := $(shell go list ./...)
+REPO       := github.com/guessi/cloudtrail-cli
+BUILDTIME  := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 GITVERSION := $(shell git describe --tags --abbrev=8)
-LDFLAGS    := -s -w
+GOVERSION  := $(shell go version | cut -d' ' -f3)
+LDFLAGS    := -s -w -X "$(REPO)/pkg/constants.GitVersion=$(GITVERSION)" -X "$(REPO)/pkg/constants.GoVersion=$(GOVERSION)" -X "$(REPO)/pkg/constants.BuildTime=$(BUILDTIME)"
 
 default: build
 
