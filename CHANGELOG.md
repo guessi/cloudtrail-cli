@@ -1,3 +1,10 @@
+# v1.0.10 / 2024-02-16
+
+* Dependencies update
+* Implement sub-command "version"
+* Bump ghr@v0.16.2
+* Bump actions/cache@v4
+
 # v1.0.9 / 2024-01-07
 
 * Dependencies update
