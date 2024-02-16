@@ -42,8 +42,7 @@ func main() {
 		},
 	}
 
-	err := app.Run(os.Args)
-	if err != nil {
+	if err := app.Run(os.Args); err != nil {
 		os.Exit(1)
 	}
 }
