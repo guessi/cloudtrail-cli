@@ -1,5 +1,9 @@
 <!-- markdownlint-disable -->
 
+# v1.0.13 / 2024-08-02
+
+* Dependencies update
+
 # v1.0.12 / 2024-06-24
 
 * Dependencies update
