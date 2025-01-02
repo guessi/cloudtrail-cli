@@ -79,7 +79,7 @@ func LookupEvents(ctx context.Context, svc *cloudtrail.Client, input *cloudtrail
 	return events[:returnSize], nil
 }
 
-func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnly bool, userName, eventSource, accessKeyId string) []ctypes.LookupAttribute {
+func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnly bool, userName, resourceName, resourceType, eventSource, accessKeyId string) []ctypes.LookupAttribute {
 	lookupAttributesInput := []ctypes.LookupAttribute{}
 
 	// LookupAttributeKeyEventId
@@ -127,6 +127,24 @@ func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnl
 			AttributeValue: aws.String(userName),
 		}
 		lookupAttributesInput = append(lookupAttributesInput, attrUserName)
+	}
+
+	// LookupAttributeKeyResourceName
+	if len(resourceName) > 0 {
+		attrResourceName := ctypes.LookupAttribute{
+			AttributeKey:   ctypes.LookupAttributeKeyResourceName,
+			AttributeValue: aws.String(resourceName),
+		}
+		lookupAttributesInput = append(lookupAttributesInput, attrResourceName)
+	}
+
+	// LookupAttributeKeyResourceType
+	if len(resourceType) > 0 {
+		attrResourceType := ctypes.LookupAttribute{
+			AttributeKey:   ctypes.LookupAttributeKeyResourceType,
+			AttributeValue: aws.String(resourceType),
+		}
+		lookupAttributesInput = append(lookupAttributesInput, attrResourceType)
 	}
 
 	// LookupAttributeKeyEventSource

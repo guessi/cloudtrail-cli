@@ -14,6 +14,8 @@ func Wrapper(c *cli.Context) {
 		c.String("event-id"),
 		c.String("event-name"),
 		c.String("user-name"),
+		c.String("resource-name"),
+		c.String("resource-type"),
 		c.String("event-source"),
 		c.String("access-key-id"),
 		c.Bool("read-only"),

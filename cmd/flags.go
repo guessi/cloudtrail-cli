@@ -49,6 +49,16 @@ var Flags = []cli.Flag{
 		Required: false,
 	},
 	&cli.StringFlag{
+		Name:     "resource-name",
+		Usage:    "Filter events with resource name",
+		Required: false,
+	},
+	&cli.StringFlag{
+		Name:     "resource-type",
+		Usage:    "Filter events with resource type",
+		Required: false,
+	},
+	&cli.StringFlag{
 		Name:     "event-source",
 		Usage:    "Filter events with event source",
 		Required: false,
