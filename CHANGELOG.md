@@ -2,8 +2,7 @@
 
 # v1.0.16 / 2025-01-04
 
-* Biuld with golang 1.22
-
+* Biuld with golang 1.23
 * Dependencies update
 * Support for filtering with ResourceName
 * Support for filtering with ResourceType
