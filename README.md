@@ -8,51 +8,14 @@
 
 Blazing fast single purpose cli for CloudTrail log filtering, written in golang
 
-# Usage
-
-```bash
-$ cloudtrail-cli --version
-cloudtrail-cli version 1.0.12
-```
+## 🚀 Quick start
 
 ```bash
 $ cloudtrail-cli --help
-NAME:
-   cloudtrail-cli - Blazing fast single purpose cli for CloudTrail log filtering
-
-USAGE:
-   cloudtrail-cli [global options] command [command options] [arguments...]
-
-VERSION:
-   1.0.12
-
-COMMANDS:
-   help, h  Shows a list of commands or help for one command
-
-GLOBAL OPTIONS:
-   --profile value, -p value
-   --region value, -r value
-   --start-time value, -s value   Timestamp in 2023-01-01T00:00:00 format (UTC)
-   --end-time value, -e value     Timestamp in 2023-01-01T00:00:00 format (UTC)
-   --event-id value               Filter events with event id
-   --event-name value             Filter events with event name
-   --user-name value              Filter events with user name
-   --event-source value           Filter events with event source
-   --access-key-id value          Filter events with access key id
-   --read-only                    Filter events with ReadOnly=true (default: false)
-   --no-read-only                 Filter events with ReadOnly=false (default: false)
-   --max-results value, -n value  (default: "20")
-   --error-only                   Filter events with errors (default: false)
-   --truncate-user-name           Truncate user name string (default: false)
-   --truncate-user-agent          Truncate user agent string (default: false)
-   --help, -h                     show help
-   --version, -v                  print the version
 ```
 
-# Sample Output
-
 ```bash
-$ cloudtrail-cli --start-time 2023-02-01T00:00:00 --end-time 2023-02-01T01:00:00 --event-name AssumeRole --max-results 5 --region us-east-1 --read-only
+$ cloudtrail-cli --start-time 2023-02-01T00:00:00 --end-time 2023-02-01T01:00:00 --event-name AssumeRole --max-results 5
 +--------------------------------------+------------+----------------------+----------+-------------------+-------------------------------+-------------------------------+-------------+-----------+----------+
 | EventId                              | EventName  | EventTime            | Username | EventSource       | UserAgent                     | SourceIPAddress               | AccessKeyId | ErrorCode | ReadOnly |
 +--------------------------------------+------------+----------------------+----------+-------------------+-------------------------------+-------------------------------+-------------+-----------+----------+
@@ -64,17 +27,18 @@ $ cloudtrail-cli --start-time 2023-02-01T00:00:00 --end-time 2023-02-01T01:00:00
 +--------------------------------------+------------+----------------------+----------+-------------------+-------------------------------+-------------------------------+-------------+-----------+----------+
 ```
 
-# Install
+## 👷 Install
 
-### Homebrew
+### For macOS users (Recommended)
 
 ```bash
 $ brew tap guessi/tap && brew update && brew install cloudtrail-cli
 ```
 
-### For non-Homebrew users, click `Details` to view more methods.
+### Manually setup (Linux, Windows, macOS)
 
-<details>
+<details><!-- markdownlint-disable-line -->
+<summary>Click to expand!</summary><!-- markdownlint-disable-line -->
 
 ### For Linux users
 
@@ -99,6 +63,6 @@ PS> Invoke-RestMethod -Uri $SRC -OutFile $DST
 ```
 </details>
 
-# License
+## ⚖️ License
 
 [Apache-2.0](LICENSE)
