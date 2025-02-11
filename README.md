@@ -8,6 +8,10 @@
 
 Blazing fast single purpose cli for CloudTrail log filtering, written in golang
 
+## 🔢 Prerequisites
+
+* An IAM Role/User with [cloudtrail:LookupEvents](https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_LookupEvents.html) permission.
+
 ## 🚀 Quick start
 
 ```bash
@@ -29,7 +33,7 @@ $ cloudtrail-cli --start-time 2023-02-01T00:00:00 --end-time 2023-02-01T01:00:00
 
 ## 👷 Install
 
-### For macOS users (Recommended)
+### For macOS/Linux users (Recommended)
 
 ```bash
 $ brew tap guessi/tap && brew update && brew install cloudtrail-cli
@@ -40,21 +44,21 @@ $ brew tap guessi/tap && brew update && brew install cloudtrail-cli
 <details><!-- markdownlint-disable-line -->
 <summary>Click to expand!</summary><!-- markdownlint-disable-line -->
 
-### For Linux users
+#### For Linux users
 
 ```bash
 $ curl -fsSL https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Linux-$(uname -m).tar.gz -o - | tar zxvf -
 $ mv ./cloudtrail-cli /usr/local/bin/cloudtrail-cli
 ```
 
-### For macOS users
+#### For macOS users
 
 ```bash
 $ curl -fsSL https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Darwin-$(uname -m).tar.gz -o - | tar zxvf -
 $ mv ./cloudtrail-cli /usr/local/bin/cloudtrail-cli
 ```
 
-### For Windows users
+#### For Windows users
 
 ```powershell
 PS> $SRC = 'https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Windows-x86_64.tar.gz'
