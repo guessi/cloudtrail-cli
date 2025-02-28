@@ -31,6 +31,13 @@ $ cloudtrail-cli --start-time 2023-02-01T00:00:00 --end-time 2023-02-01T01:00:00
 +--------------------------------------+------------+----------------------+----------+-------------------+-------------------------------+-------------------------------+-------------+-----------+----------+
 ```
 
+## :accessibility: FAQ
+
+Why it would return unexpected results when multiple flags are set?
+
+* [cloudtrail-cli](https://github.com/guessi/cloudtrail-cli) leverage [LookupEvents](https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_LookupEvents.html) to retrieve events. Howerver, despite there is a `s` in the end of the API name and it does accept a list of `LookupAttributes`, but it doesn't change the limitation that stated in the API document - [Currently the list can contain only one item](https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_LookupEvents.html#awscloudtrail-LookupEvents-request-LookupAttributes). Make sure to pass exactly one filter at a time to guarantee your result is expected.
+
+
 ## 👷 Install
 
 ### For macOS/Linux users (Recommended)
