@@ -1,5 +1,14 @@
 <!-- markdownlint-disable -->
 
+# v1.0.17 / 2025-02-28
+
+* Update staticcheck@2025.1
+* Dependencies update
+* Remove `--no-read-only` to make it easier to use
+  * no `--read-only` flag set, it should not pass `ReadOnly` to the `LookupAttributes`
+  * with `--read-only` flag set (or `--read-only=true`), it would pass `ReadOnly=true` to the `LookupAttributes`
+  * with `--read-only=false` flag set, it would pass `ReadOnly=false` to the `LookupAttributes`
+
 # v1.0.16 / 2025-01-04
 
 * Biuld with golang 1.23
