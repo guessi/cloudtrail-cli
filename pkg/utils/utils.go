@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 
@@ -79,7 +80,7 @@ func LookupEvents(ctx context.Context, svc *cloudtrail.Client, input *cloudtrail
 	return events[:returnSize], nil
 }
 
-func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnly bool, userName, resourceName, resourceType, eventSource, accessKeyId string) []ctypes.LookupAttribute {
+func composeLookupAttributesInput(eventId, eventName string, isReadOnlyFlagSet, readOnly bool, userName, resourceName, resourceType, eventSource, accessKeyId string) []ctypes.LookupAttribute {
 	lookupAttributesInput := []ctypes.LookupAttribute{}
 
 	// LookupAttributeKeyEventId
@@ -101,23 +102,14 @@ func composeLookupAttributesInput(eventId, eventName string, readOnly, noReadOnl
 	}
 
 	// LookupAttributeKeyReadOnly
-	var shouldPassReadonly bool
-	var lookupAttributeKeyReadOnlyValue *string
-	if readOnly != noReadOnly {
-		shouldPassReadonly = true
-		if readOnly {
-			lookupAttributeKeyReadOnlyValue = aws.String("true")
-		}
-		if noReadOnly {
-			lookupAttributeKeyReadOnlyValue = aws.String("false")
-		}
-	}
-	if shouldPassReadonly {
-		attrReadOnly := ctypes.LookupAttribute{
-			AttributeKey:   ctypes.LookupAttributeKeyReadOnly,
-			AttributeValue: lookupAttributeKeyReadOnlyValue,
-		}
-		lookupAttributesInput = append(lookupAttributesInput, attrReadOnly)
+	if isReadOnlyFlagSet {
+		lookupAttributesInput = append(
+			lookupAttributesInput,
+			ctypes.LookupAttribute{
+				AttributeKey:   ctypes.LookupAttributeKeyReadOnly,
+				AttributeValue: aws.String(strconv.FormatBool(readOnly)),
+			},
+		)
 	}
 
 	// LookupAttributeKeyUsername

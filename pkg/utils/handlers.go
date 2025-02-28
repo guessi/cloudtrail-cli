@@ -14,15 +14,10 @@ import (
 	"github.com/jedib0t/go-pretty/v6/text"
 )
 
-func EventsHandler(profile, region string, startTime, endTime *time.Time, eventId, eventName, userName, resourceName, resourceType, eventSource, accessKeyId string, readOnly, noReadOnly bool, maxResults int, errorOnly, truncateUserName, truncateUserAgent bool) {
+func EventsHandler(profile, region string, startTime, endTime *time.Time, eventId, eventName, userName, resourceName, resourceType, eventSource, accessKeyId string, isReadOnlyFlagSet, readOnly bool, maxResults int, errorOnly, truncateUserName, truncateUserAgent bool) {
 	// do nothing if maxResults is invalid input
 	if maxResults <= 0 {
 		log.Fatalf("Can not pass --max-results with a value lower or equal to 0.\n")
-	}
-
-	// --read-only and --no-read-only should be mutually exclusive
-	if readOnly && noReadOnly {
-		log.Fatalf("Can not pass --read-only and --no-read-only at the same time.\n")
 	}
 
 	cfg, err := config.LoadDefaultConfig(
@@ -42,8 +37,8 @@ func EventsHandler(profile, region string, startTime, endTime *time.Time, eventI
 		LookupAttributes: composeLookupAttributesInput(
 			eventId,
 			eventName,
+			isReadOnlyFlagSet,
 			readOnly,
-			noReadOnly,
 			userName,
 			resourceName,
 			resourceType,

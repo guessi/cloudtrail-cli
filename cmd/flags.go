@@ -73,11 +73,6 @@ var Flags = []cli.Flag{
 		Usage:    "Filter events with ReadOnly=true",
 		Required: false,
 	},
-	&cli.BoolFlag{
-		Name:     "no-read-only",
-		Usage:    "Filter events with ReadOnly=false",
-		Required: false,
-	},
 	&cli.StringFlag{
 		Name:     "max-results",
 		Aliases:  []string{"n"},

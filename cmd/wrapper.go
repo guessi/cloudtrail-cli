@@ -6,6 +6,11 @@ import (
 )
 
 func Wrapper(c *cli.Context) {
+	var isReadOnlyFlagSet bool
+	if c.IsSet("read-only") {
+		isReadOnlyFlagSet = true
+	}
+
 	utils.EventsHandler(
 		c.String("profile"),
 		c.String("region"),
@@ -18,8 +23,8 @@ func Wrapper(c *cli.Context) {
 		c.String("resource-type"),
 		c.String("event-source"),
 		c.String("access-key-id"),
+		isReadOnlyFlagSet,
 		c.Bool("read-only"),
-		c.Bool("no-read-only"),
 		c.Int("max-results"),
 		c.Bool("error-only"),
 		c.Bool("truncate-user-name"),
