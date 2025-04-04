@@ -1,5 +1,10 @@
 <!-- markdownlint-disable -->
 
+# v1.0.18 / 2025-04-04
+
+* Biuld with golang 1.24
+* Dependencies update
+
 # v1.0.17 / 2025-02-28
 
 * Update staticcheck@2025.1
