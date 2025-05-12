@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"github.com/guessi/cloudtrail-cli/pkg/utils"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
-func Wrapper(c *cli.Context) {
+func Wrapper(c *cli.Command) {
 	var isReadOnlyFlagSet bool
 	if c.IsSet("read-only") {
 		isReadOnlyFlagSet = true

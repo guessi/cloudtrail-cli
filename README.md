@@ -19,16 +19,14 @@ $ cloudtrail-cli --help
 ```
 
 ```bash
-$ cloudtrail-cli --start-time 2023-02-01T00:00:00 --end-time 2023-02-01T01:00:00 --event-name AssumeRole --max-results 5
-+--------------------------------------+------------+----------------------+----------+-------------------+-------------------------------+-------------------------------+-------------+-----------+----------+
-| EventId                              | EventName  | EventTime            | Username | EventSource       | UserAgent                     | SourceIPAddress               | AccessKeyId | ErrorCode | ReadOnly |
-+--------------------------------------+------------+----------------------+----------+-------------------+-------------------------------+-------------------------------+-------------+-----------+----------+
-| 998a47f3-fb53-48e0-83f1-111111111111 | AssumeRole | 2023-02-01T00:58:28Z | -        | sts.amazonaws.com | eks.amazonaws.com             | eks.amazonaws.com             |             |           | true     |
-| 56018bd8-d0f4-41d3-a718-111111111111 | AssumeRole | 2023-02-01T00:57:51Z | -        | sts.amazonaws.com | internetmonitor.amazonaws.com | internetmonitor.amazonaws.com |             |           | true     |
-| d5f7ff3f-af90-4f05-9050-111111111111 | AssumeRole | 2023-02-01T00:55:22Z | -        | sts.amazonaws.com | ssm.amazonaws.com             | ssm.amazonaws.com             |             |           | true     |
-| 139dd66c-d192-47fc-9158-111111111111 | AssumeRole | 2023-02-01T00:40:38Z | -        | sts.amazonaws.com | lambda.amazonaws.com          | lambda.amazonaws.com          |             |           | true     |
-| 8af6dc45-fd58-4ad5-9e95-111111111111 | AssumeRole | 2023-02-01T00:35:06Z | -        | sts.amazonaws.com | lambda.amazonaws.com          | lambda.amazonaws.com          |             |           | true     |
-+--------------------------------------+------------+----------------------+----------+-------------------+-------------------------------+-------------------------------+-------------+-----------+----------+
+$ cloudtrail-cli --start-time 2025-05-12T00:00:00Z --end-time 2025-05-12T01:00:00Z --event-source sts.amazonaws.com --max-results 3
++--------------------------------------+-------------------+----------------------+--------------------------------+-------------------+-------------------+-------------------+----------------------+-----------+----------+
+| EventId                              | EventName         | EventTime            | Username                       | EventSource       | UserAgent         | SourceIPAddress   | AccessKeyId          | ErrorCode | ReadOnly |
++--------------------------------------+-------------------+----------------------+--------------------------------+-------------------+-------------------+-------------------+----------------------+-----------+----------+
+| 9a7304bb-fc9c-40ce-b148-25b875d5e534 | GetCallerIdentity | 2025-05-12T00:59:57Z | aws-go-sdk-1746934587741269082 | sts.amazonaws.com | eks.amazonaws.com | eks.amazonaws.com | ASIAEXAMPLE098765432 |           | true     |
+| d0db6d59-3277-4297-8f73-72eb00c35c77 | GetCallerIdentity | 2025-05-12T00:59:52Z | aws-go-sdk-1746830061119273752 | sts.amazonaws.com | eks.amazonaws.com | eks.amazonaws.com | ASIAEXAMPLE098765432 |           | true     |
+| ae8b7cb1-9b58-4897-be37-8f35ff077a99 | GetCallerIdentity | 2025-05-12T00:59:28Z | aws-go-sdk-1746830061119273752 | sts.amazonaws.com | eks.amazonaws.com | eks.amazonaws.com | ASIAEXAMPLE098765432 |           | true     |
++--------------------------------------+-------------------+----------------------+--------------------------------+-------------------+-------------------+-------------------+----------------------+-----------+----------+
 ```
 
 ## :accessibility: FAQ

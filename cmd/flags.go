@@ -3,7 +3,7 @@ package cmd
 import (
 	"time"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 var Flags = []cli.Flag{
@@ -18,19 +18,23 @@ var Flags = []cli.Flag{
 		Required: false,
 	},
 	&cli.TimestampFlag{
-		Name:     "start-time",
-		Aliases:  []string{"s"},
-		Layout:   "2006-01-02T15:04:05",
-		Timezone: time.UTC,
-		Usage:    "Timestamp in 2023-01-01T00:00:00 format (UTC)",
+		Name:    "start-time",
+		Aliases: []string{"s"},
+		Config: cli.TimestampConfig{
+			Layouts:  []string{time.RFC3339},
+			Timezone: time.UTC,
+		},
+		Usage:    "Timestamp in RFC3339 format",
 		Required: false,
 	},
 	&cli.TimestampFlag{
-		Name:     "end-time",
-		Aliases:  []string{"e"},
-		Layout:   "2006-01-02T15:04:05",
-		Timezone: time.UTC,
-		Usage:    "Timestamp in 2023-01-01T00:00:00 format (UTC)",
+		Name:    "end-time",
+		Aliases: []string{"e"},
+		Config: cli.TimestampConfig{
+			Layouts:  []string{time.RFC3339},
+			Timezone: time.UTC,
+		},
+		Usage:    "Timestamp in RFC3339 format",
 		Required: false,
 	},
 	&cli.StringFlag{
@@ -73,10 +77,10 @@ var Flags = []cli.Flag{
 		Usage:    "Filter events with ReadOnly=true",
 		Required: false,
 	},
-	&cli.StringFlag{
+	&cli.IntFlag{
 		Name:     "max-results",
 		Aliases:  []string{"n"},
-		Value:    "20",
+		Value:    20,
 		Required: false,
 	},
 	&cli.BoolFlag{

@@ -1,13 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"regexp"
 
 	"github.com/guessi/cloudtrail-cli/cmd"
 	"github.com/guessi/cloudtrail-cli/pkg/constants"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 func showVersion() {
@@ -20,12 +21,12 @@ func showVersion() {
 }
 
 func main() {
-	app := &cli.App{
+	app := &cli.Command{
 		Name:    constants.NAME,
 		Usage:   constants.USAGE,
 		Version: constants.GitVersion,
 		Flags:   cmd.Flags,
-		Action: func(c *cli.Context) error {
+		Action: func(ctx context.Context, c *cli.Command) error {
 			cmd.Wrapper(c)
 			return nil
 		},
@@ -34,7 +35,7 @@ func main() {
 				Name:    "version",
 				Aliases: []string{"v"},
 				Usage:   "Print version number",
-				Action: func(cCtx *cli.Context) error {
+				Action: func(context.Context, *cli.Command) error {
 					showVersion()
 					return nil
 				},
@@ -42,7 +43,7 @@ func main() {
 		},
 	}
 
-	if err := app.Run(os.Args); err != nil {
+	if err := app.Run(context.Background(), os.Args); err != nil {
 		os.Exit(1)
 	}
 }
