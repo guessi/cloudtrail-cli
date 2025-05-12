@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"os"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
@@ -14,16 +13,16 @@ import (
 	"github.com/jedib0t/go-pretty/v6/text"
 )
 
-func EventsHandler(profile, region string, startTime, endTime time.Time, eventId, eventName, userName, resourceName, resourceType, eventSource, accessKeyId string, isReadOnlyFlagSet, readOnly bool, maxResults int, errorOnly, truncateUserName, truncateUserAgent bool) {
+func EventsHandler(i types.CloudTrailCliInput) {
 	// do nothing if maxResults is invalid input
-	if maxResults <= 0 {
+	if i.MaxResults <= 0 {
 		log.Fatalln("Can not pass --max-results with a value lower or equal to 0.")
 	}
 
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
-		config.WithRegion(region),
-		config.WithSharedConfigProfile(profile),
+		config.WithRegion(i.Region),
+		config.WithSharedConfigProfile(i.Profile),
 	)
 	if err != nil {
 		log.Fatalf("Unable to load SDK config. Error: %s\n", err.Error())
@@ -31,24 +30,24 @@ func EventsHandler(profile, region string, startTime, endTime time.Time, eventId
 
 	svc := cloudtrail.NewFromConfig(cfg)
 
-	input := &cloudtrail.LookupEventsInput{
-		StartTime: &startTime,
-		EndTime:   &endTime,
+	lookupEventsInput := &cloudtrail.LookupEventsInput{
+		StartTime: &i.StartTime,
+		EndTime:   &i.EndTime,
 		LookupAttributes: composeLookupAttributesInput(
-			eventId,
-			eventName,
-			isReadOnlyFlagSet,
-			readOnly,
-			userName,
-			resourceName,
-			resourceType,
-			eventSource,
-			accessKeyId,
+			i.EventId,
+			i.EventName,
+			i.IsReadOnlyFlagSet,
+			i.ReadOnly,
+			i.UserName,
+			i.ResourceName,
+			i.ResourceType,
+			i.EventSource,
+			i.AccessKeyId,
 		),
-		MaxResults: getBatchSize(maxResults),
+		MaxResults: getBatchSize(i.MaxResults),
 	}
 
-	events, err := LookupEvents(context.TODO(), svc, input, maxResults)
+	events, err := LookupEvents(context.TODO(), svc, lookupEventsInput, i.MaxResults)
 	if err != nil {
 		log.Fatalf("Unable to ListTrails. Error: %s\n", err.Error())
 	}
@@ -75,7 +74,7 @@ func EventsHandler(profile, region string, startTime, endTime time.Time, eventId
 		}
 
 		// early exit if errorOnly flag is set
-		if errorOnly && len(c.ErrorCode) <= 0 {
+		if i.ErrorOnly && len(c.ErrorCode) <= 0 {
 			continue
 		}
 
@@ -85,9 +84,9 @@ func EventsHandler(profile, region string, startTime, endTime time.Time, eventId
 			c.EventId,
 			c.EventName,
 			c.EventTime,
-			truncateString(truncateUserName, username, 24),
+			truncateString(i.TruncateUserName, username, 24),
 			c.EventSource,
-			truncateString(truncateUserAgent, c.UserAgent, 24),
+			truncateString(i.TruncateUserAgent, c.UserAgent, 24),
 			c.SourceIPAddress,
 			c.UserIdentity.AccessKeyId,
 			c.ErrorCode,

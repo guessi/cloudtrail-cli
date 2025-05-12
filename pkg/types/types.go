@@ -1,5 +1,27 @@
 package types
 
+import "time"
+
+type CloudTrailCliInput struct {
+	Profile           string
+	Region            string
+	StartTime         time.Time
+	EndTime           time.Time
+	EventId           string
+	EventName         string
+	UserName          string
+	ResourceName      string
+	ResourceType      string
+	EventSource       string
+	AccessKeyId       string
+	IsReadOnlyFlagSet bool
+	ReadOnly          bool
+	MaxResults        int
+	ErrorOnly         bool
+	TruncateUserName  bool
+	TruncateUserAgent bool
+}
+
 // References:
 // - https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference.html
 // - https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-record-contents.html
