@@ -1,5 +1,9 @@
 <!-- markdownlint-disable -->
 
+# v1.0.19 / 2025-05-22
+
+* Migrate to github.com/urfave/cli/v3
+
 # v1.0.18 / 2025-04-04
 
 * Build with golang 1.24
