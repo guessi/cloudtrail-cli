@@ -40,8 +40,16 @@ Why it would return unexpected results when multiple flags are set?
 
 ### For macOS/Linux users (Recommended)
 
+Brand new install
+
 ```bash
-$ brew tap guessi/tap && brew update && brew install cloudtrail-cli
+brew tap guessi/tap && brew update && brew install cloudtrail-cli
+```
+
+To upgrade version
+
+```bash
+brew update && brew upgrade cloudtrail-cli
 ```
 
 ### Manually setup (Linux, Windows, macOS)
