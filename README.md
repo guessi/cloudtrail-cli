@@ -15,11 +15,11 @@ Blazing fast single purpose cli for CloudTrail log filtering, written in golang
 ## 🚀 Quick start
 
 ```bash
-$ cloudtrail-cli --help
+cloudtrail-cli --help
 ```
 
 ```bash
-$ cloudtrail-cli --start-time 2025-05-12T00:00:00Z --end-time 2025-05-12T01:00:00Z --event-source sts.amazonaws.com --max-results 3
+cloudtrail-cli --start-time 2025-05-12T00:00:00Z --end-time 2025-05-12T01:00:00Z --event-source sts.amazonaws.com --max-results 3
 +--------------------------------------+-------------------+----------------------+--------------------------------+-------------------+-------------------+-------------------+----------------------+-----------+----------+
 | EventId                              | EventName         | EventTime            | Username                       | EventSource       | UserAgent         | SourceIPAddress   | AccessKeyId          | ErrorCode | ReadOnly |
 +--------------------------------------+-------------------+----------------------+--------------------------------+-------------------+-------------------+-------------------+----------------------+-----------+----------+
@@ -60,23 +60,23 @@ brew update && brew upgrade cloudtrail-cli
 #### For Linux users
 
 ```bash
-$ curl -fsSL https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Linux-$(uname -m).tar.gz -o - | tar zxvf -
-$ mv ./cloudtrail-cli /usr/local/bin/cloudtrail-cli
+curl -fsSL https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Linux-$(uname -m).tar.gz -o - | tar zxvf -
+mv ./cloudtrail-cli /usr/local/bin/cloudtrail-cli
 ```
 
 #### For macOS users
 
 ```bash
-$ curl -fsSL https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Darwin-$(uname -m).tar.gz -o - | tar zxvf -
-$ mv ./cloudtrail-cli /usr/local/bin/cloudtrail-cli
+curl -fsSL https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Darwin-$(uname -m).tar.gz -o - | tar zxvf -
+mv ./cloudtrail-cli /usr/local/bin/cloudtrail-cli
 ```
 
 #### For Windows users
 
 ```powershell
-PS> $SRC = 'https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Windows-x86_64.tar.gz'
-PS> $DST = 'C:\Temp\cloudtrail-cli-Windows-x86_64.tar.gz'
-PS> Invoke-RestMethod -Uri $SRC -OutFile $DST
+$SRC = 'https://github.com/guessi/cloudtrail-cli/releases/latest/download/cloudtrail-cli-Windows-x86_64.tar.gz'
+$DST = 'C:\Temp\cloudtrail-cli-Windows-x86_64.tar.gz'
+Invoke-RestMethod -Uri $SRC -OutFile $DST
 ```
 </details>
 
