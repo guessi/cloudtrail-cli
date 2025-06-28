@@ -1,5 +1,9 @@
 <!-- markdownlint-disable -->
 
+# v1.0.20 / 2025-06-28
+
+* Dependencies update
+
 # v1.0.19 / 2025-05-22
 
 * Migrate to github.com/urfave/cli/v3
