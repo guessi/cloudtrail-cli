@@ -1,5 +1,9 @@
 <!-- markdownlint-disable -->
 
+# v1.0.21 / 2025-07-02
+
+* Fix invalid StartTime/EndTime issue after upgraded to `urfave/cli/v3`
+
 # v1.0.20 / 2025-06-28
 
 * Dependencies update
