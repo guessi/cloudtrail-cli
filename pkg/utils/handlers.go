@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
@@ -29,6 +30,16 @@ func EventsHandler(i types.CloudTrailCliInput) {
 	}
 
 	svc := cloudtrail.NewFromConfig(cfg)
+
+	// Basic validation for the time range input
+	now := time.Now()
+	if i.EndTime.Equal(time.Time{}) {
+		i.EndTime = now
+	}
+
+	if i.StartTime.Equal(time.Time{}) {
+		i.StartTime = i.EndTime.AddDate(0, 0, -1)
+	}
 
 	lookupEventsInput := &cloudtrail.LookupEventsInput{
 		StartTime: &i.StartTime,
