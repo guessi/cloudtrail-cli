@@ -1,4 +1,4 @@
-.PHONY: staticcheck dependency clean build release all
+.PHONY: staticcheck dependency clean build release all test
 
 PKGS       := $(shell go list ./...)
 REPO       := github.com/guessi/cloudtrail-cli
@@ -21,7 +21,7 @@ test:
 	go version
 	go fmt ./...
 	go vet ./...
-	# go test -v ./...
+	go test ./...
 
 dependency:
 	go mod download
