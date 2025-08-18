@@ -1,5 +1,19 @@
 <!-- markdownlint-disable -->
 
+# v1.1.0 / 2025-08-18
+
+* Enhanced error handling with more descriptive messages
+* Added comprehensive test coverage for core functionality
+* Request timeout protection (5 minutes) to prevent hanging operations
+* Input validation for AWS Access Key ID format
+* UUID validation to ensure proper formatting
+* Memory protection against large JSON payloads
+* Safer UTF-8 string truncation to prevent character corruption
+* Updated README.md with clearer usage instructions and FAQ
+* Improved Makefile for better development workflow
+* Built with golang 1.24.6
+* Updated dependencies to latest versions
+
 # v1.0.21 / 2025-07-02
 
 * Fix invalid StartTime/EndTime issue after upgraded to `urfave/cli/v3`
