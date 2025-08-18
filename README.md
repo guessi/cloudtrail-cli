@@ -31,10 +31,30 @@ cloudtrail-cli --start-time 2025-05-12T00:00:00Z --end-time 2025-05-12T01:00:00Z
 
 ## :accessibility: FAQ
 
-Why it would return unexpected results when multiple flags are set?
+### How do I get started with cloudtrail-cli?
 
-* [cloudtrail-cli](https://github.com/guessi/cloudtrail-cli) leverage [LookupEvents](https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_LookupEvents.html) to retrieve events. Howerver, despite there is a `s` in the end of the API name and it does accept a list of `LookupAttributes`, but it doesn't change the limitation that stated in the API document - [Currently the list can contain only one item](https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_LookupEvents.html#awscloudtrail-LookupEvents-request-LookupAttributes). Make sure to pass exactly one filter at a time to guarantee your result is expected.
+Run `cloudtrail-cli --help` to see all available options and filters.
 
+### What AWS permissions do I need?
+
+Your IAM user/role needs [cloudtrail:LookupEvents](https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_LookupEvents.html) permission. If you get "permission denied" errors, verify this permission is granted.
+
+### How do I filter events by time range?
+
+Use `--start-time` and `--end-time` with RFC3339 format: `2025-05-12T00:00:00Z`
+
+### What happens if I only specify `--start-time` or `--end-time`?
+
+- If you only provide `--end-time`, events from 24 hours before that end time will be returned.
+- If you only provide `--start-time`, events from that time to now will be returned.
+
+### Can I use multiple filters at once?
+
+No, use exactly one event filter at a time due to [AWS API limitations](https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_LookupEvents.html#awscloudtrail-LookupEvents-request-LookupAttributes).
+
+### Why am I not getting any results?
+
+Check if your time range contains events and ensure [only one event filter is used at a time](https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_LookupEvents.html#awscloudtrail-LookupEvents-request-LookupAttributes).
 
 ## 👷 Install
 
