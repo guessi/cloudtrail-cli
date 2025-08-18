@@ -6,7 +6,9 @@
 [![GitHub release](https://img.shields.io/github/release/guessi/cloudtrail-cli.svg)](https://github.com/guessi/cloudtrail-cli/releases/latest)
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/guessi/cloudtrail-cli)](https://github.com/guessi/cloudtrail-cli/blob/main/go.mod)
 
-Blazing fast single purpose cli for CloudTrail log filtering, written in golang
+User-friendly CloudTrail CLI: simple syntax, clean tables, no AWS documentation required
+
+Stop fighting with complex `aws cloudtrail lookup-events` JSON parameters. This tool changes CloudTrail queries into simple, easy commands with clean table output. Perfect for developers who want CloudTrail data without learning complex AWS CLI. No need to read AWS documentation or build complex JSON queries. Just use simple flags like `--start-time` and `--event-source` to get your data. Results show in clean, easy tables that you can understand quickly - no JSON handling needed.
 
 ## 🔢 Prerequisites
 
