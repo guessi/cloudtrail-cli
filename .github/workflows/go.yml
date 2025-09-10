@@ -10,6 +10,30 @@ on:
     - "v1.[0-9]+.[0-9]+"
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Set up Go
+      uses: actions/setup-go@v6
+      with:
+        go-version-file: "go.mod"
+
+    - name: Cache Go modules and build cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/go/pkg/mod
+          ~/.cache/go-build
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+
+    - name: Run tests
+      run: make test
+
   lint:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -21,20 +45,22 @@ jobs:
       with:
         go-version-file: "go.mod"
 
-    - name: Run make test
-      run: make test
+    - name: Cache Go modules and build cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/go/pkg/mod
+          ~/.cache/go-build
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
 
-    - name: Run make staticcheck
+    - name: Run staticcheck
       run: make staticcheck
 
   build:
-    needs:
-    - lint
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    strategy:
-      matrix:
-        platform: ['darwin', 'linux', 'windows']
+    timeout-minutes: 8
     steps:
     - uses: actions/checkout@v5
 
@@ -43,51 +69,41 @@ jobs:
       with:
         go-version-file: "go.mod"
 
-    - name: Run make build-${{ matrix.platform }}
-      run: make build-${{ matrix.platform }}
-
-    - name: Check outputs
-      run: find ./releases -type f
-
-    - name: Cache builds
+    - name: Cache Go modules and build cache
       uses: actions/cache@v4
       with:
-        path: ./releases
-        key: ${{ runner.os }}-go-${{ matrix.platform }}-${{ hashFiles('**/go.sum') }}-${{ github.ref_name }}
+        path: |
+          ~/go/pkg/mod
+          ~/.cache/go-build
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+
+    - name: Build all platforms
+      run: make build-parallel
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: binaries-all
+        path: releases/
+        retention-days: 1
 
   release:
-    # only work when it is a tagged release
-    # ref: https://docs.github.com/en/actions/learn-github-actions/expressions
     if: ${{ github.ref_type == 'tag' && contains(github.ref, 'v1.') }}
-    needs:
-    - build
+    needs: [test, lint, build]
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
     - uses: actions/checkout@v5
 
-    - name: Restore cache-darwin
-      uses: actions/cache@v4
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
       with:
-        path: ./releases
-        key: ${{ runner.os }}-go-darwin-${{ hashFiles('**/go.sum') }}-${{ github.ref_name }}
+        path: releases/
+        merge-multiple: true
 
-    - name: Restore cache-linux
-      uses: actions/cache@v4
-      with:
-        path: ./releases
-        key: ${{ runner.os }}-go-linux-${{ hashFiles('**/go.sum') }}-${{ github.ref_name }}
-
-    - name: Restore cache-windows
-      uses: actions/cache@v4
-      with:
-        path: ./releases
-        key: ${{ runner.os }}-go-windows-${{ hashFiles('**/go.sum') }}-${{ github.ref_name }}
-
-    - name: Check outputs
-      run: find ./releases -type f
-
-    - name: Run make release
-      run: make release
+    - name: Run make release-only
+      run: make release-only
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

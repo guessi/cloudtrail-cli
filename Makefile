@@ -1,94 +1,123 @@
-.PHONY: staticcheck clean build release all test
-.DEFAULT_GOAL := build
+# Build configuration
+REPO        := github.com/guessi/cloudtrail-cli
+BINARY      := cloudtrail-cli
 
-PKGS       := $(shell go list ./...)
-REPO       := github.com/guessi/cloudtrail-cli
-BUILDTIME  := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-GITVERSION := $(shell git describe --tags --abbrev=8)
-GOVERSION  := $(shell go version | cut -d' ' -f3)
-LDFLAGS    := -s -w -X "$(REPO)/pkg/constants.GitVersion=$(GITVERSION)" -X "$(REPO)/pkg/constants.GoVersion=$(GOVERSION)" -X "$(REPO)/pkg/constants.BuildTime=$(BUILDTIME)"
+# Variables
+PKGS        := $(shell test -f go.mod && go list ./... 2>/dev/null || echo "")
+BUILDTIME   := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+GITVERSION  := $(shell git describe --tags --abbrev=8 2>/dev/null || echo "dev-$(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)")
+GOVERSION   := $(shell go version | cut -d' ' -f3)
+NPROC       := $(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 2)
+SHASUM      := $(shell command -v sha1sum >/dev/null 2>&1 && echo "sha1sum" || echo "shasum -a 1")
 
-staticcheck: STATICCHECK_VERSION := 2025.1.1
-staticcheck:
-	@echo "Ensuring staticcheck version ($(STATICCHECK_VERSION))..."
-	@current_version=$$(staticcheck -version 2>/dev/null | grep -o '[0-9]\{4\}\.[0-9]\+\.[0-9]\+' || echo "none"); \
-	if [ "$$current_version" != "$(STATICCHECK_VERSION)" ]; then \
-		echo "Installing staticcheck ($(STATICCHECK_VERSION))..."; \
-		go install honnef.co/go/tools/cmd/staticcheck@$(STATICCHECK_VERSION) || exit 1; \
-	else \
-		echo "staticcheck ($(STATICCHECK_VERSION)) already installed"; \
-	fi
-	@echo "Running staticcheck..."
-	@staticcheck ./...
+# Build flags
+LDFLAGS     := -s -w \
+               -X "$(REPO)/pkg/constants.GitVersion=$(GITVERSION)" \
+               -X "$(REPO)/pkg/constants.GoVersion=$(GOVERSION)" \
+               -X "$(REPO)/pkg/constants.BuildTime=$(BUILDTIME)"
 
-test:
+RELEASE_DIR := releases/$(GITVERSION)
+
+.PHONY: default \
+         check-tools \
+         staticcheck \
+         test \
+         dependency \
+         build-linux-x86_64 build-linux-arm64 build-darwin-x86_64 build-darwin-arm64 build-windows-x86_64 \
+         build-linux build-darwin build-windows \
+         build-parallel \
+         clean release all
+
+default: build-parallel
+
+check-tools:
+	@for tool in go git tar curl; do \
+		command -v $$tool >/dev/null 2>&1 || { echo "$$tool is required but not installed"; exit 1; }; \
+	done
+
+staticcheck: check-tools
+	@go install honnef.co/go/tools/cmd/staticcheck@latest
+	@if [ -n "$(PKGS)" ]; then staticcheck $(PKGS); else echo "No packages found, skipping staticcheck"; fi
+
+test: check-tools
 	@go fmt ./...
 	@go vet ./...
 	@go test ./...
 
-build-linux-x86_64:
-	@echo "Creating Build for Linux (x86_64)..."
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="$(LDFLAGS)" -o ./releases/$(GITVERSION)/Linux-x86_64/cloudtrail-cli || exit 1
-	@cp ./LICENSE ./releases/$(GITVERSION)/Linux-x86_64/LICENSE
-	@tar zcf ./releases/$(GITVERSION)/cloudtrail-cli-Linux-x86_64.tar.gz -C releases/$(GITVERSION)/Linux-x86_64 cloudtrail-cli LICENSE
-
-build-linux-arm64:
-	@echo "Creating Build for Linux (arm64)..."
-	@CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags="$(LDFLAGS)" -o ./releases/$(GITVERSION)/Linux-arm64/cloudtrail-cli || exit 1
-	@cp ./LICENSE ./releases/$(GITVERSION)/Linux-arm64/LICENSE
-	@tar zcf ./releases/$(GITVERSION)/cloudtrail-cli-Linux-arm64.tar.gz -C releases/$(GITVERSION)/Linux-arm64 cloudtrail-cli LICENSE
-
-build-darwin-x86_64:
-	@echo "Creating Build for macOS (x86_64)..."
-	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags="$(LDFLAGS)" -o ./releases/$(GITVERSION)/Darwin-x86_64/cloudtrail-cli || exit 1
-	@cp ./LICENSE ./releases/$(GITVERSION)/Darwin-x86_64/LICENSE
-	@tar zcf ./releases/$(GITVERSION)/cloudtrail-cli-Darwin-x86_64.tar.gz -C releases/$(GITVERSION)/Darwin-x86_64 cloudtrail-cli LICENSE
-
-build-darwin-arm64:
-	@echo "Creating Build for macOS (arm64)..."
-	@CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags="$(LDFLAGS)" -o ./releases/$(GITVERSION)/Darwin-arm64/cloudtrail-cli || exit 1
-	@cp ./LICENSE ./releases/$(GITVERSION)/Darwin-arm64/LICENSE
-	@tar zcf ./releases/$(GITVERSION)/cloudtrail-cli-Darwin-arm64.tar.gz -C releases/$(GITVERSION)/Darwin-arm64 cloudtrail-cli LICENSE
-
-build-windows-x86_64:
-	@echo "Creating Build for Windows (x86_64)..."
-	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="$(LDFLAGS)" -o ./releases/$(GITVERSION)/Windows-x86_64/cloudtrail-cli.exe || exit 1
-	@cp ./LICENSE ./releases/$(GITVERSION)/Windows-x86_64/LICENSE.txt
-	@tar zcf ./releases/$(GITVERSION)/cloudtrail-cli-Windows-x86_64.tar.gz -C releases/$(GITVERSION)/Windows-x86_64 cloudtrail-cli.exe LICENSE.txt
-
-build-linux: build-linux-x86_64 build-linux-arm64
-build-darwin: build-darwin-x86_64 build-darwin-arm64
-build-windows: build-windows-x86_64
-
-build: build-linux build-darwin build-windows
+dependency: check-tools
+	@test -f go.mod || { echo "go.mod not found"; exit 1; }
+	@go mod download
 
 clean:
-	@echo "Cleanup Releases..."
-	@rm -rf ./releases/*
+	@rm -rf ./releases/* ghr
+
+define build_binary
+	@echo "Building for $(1)/$(2)..."
+	@mkdir -p $(RELEASE_DIR)/$(3)
+	@CGO_ENABLED=0 GOOS=$(1) GOARCH=$(2) go build \
+		-ldflags="$(LDFLAGS)" \
+		-o $(RELEASE_DIR)/$(3)/$(BINARY)$(4) || exit 1
+	@test -f LICENSE || { echo "LICENSE file not found"; exit 1; }
+	@cp LICENSE $(RELEASE_DIR)/$(3)/LICENSE$(5)
+	@tar zcf $(RELEASE_DIR)/$(BINARY)-$(3).tar.gz \
+		-C $(RELEASE_DIR)/$(3) $(BINARY)$(4) LICENSE$(5)
+	@test -f $(RELEASE_DIR)/$(BINARY)-$(3).tar.gz || { echo "Failed to create archive"; exit 1; }
+endef
+
+build-linux-x86_64: check-tools
+	$(call build_binary,linux,amd64,Linux-x86_64,,)
+
+build-linux-arm64: check-tools
+	$(call build_binary,linux,arm64,Linux-arm64,,)
+
+build-darwin-x86_64: check-tools
+	$(call build_binary,darwin,amd64,Darwin-x86_64,,)
+
+build-darwin-arm64: check-tools
+	$(call build_binary,darwin,arm64,Darwin-arm64,,)
+
+build-windows-x86_64: check-tools
+	$(call build_binary,windows,amd64,Windows-x86_64,.exe,.txt)
+
+build-linux: check-tools dependency
+	@mkdir -p $(RELEASE_DIR)
+	@$(MAKE) -j$(NPROC) build-linux-x86_64 build-linux-arm64
+
+build-darwin: check-tools dependency
+	@mkdir -p $(RELEASE_DIR)
+	@$(MAKE) -j$(NPROC) build-darwin-x86_64 build-darwin-arm64
+
+build-windows: check-tools dependency
+	@mkdir -p $(RELEASE_DIR)
+	@$(MAKE) -j$(NPROC) build-windows-x86_64
+
+build-parallel: check-tools dependency
+	@mkdir -p $(RELEASE_DIR)
+	@$(MAKE) -j$(NPROC) build-linux-x86_64 build-linux-arm64 build-darwin-x86_64 build-darwin-arm64 build-windows-x86_64
+
+release: check-tools build-parallel
+	@echo "Creating release..."
+	@test -n "$(GITHUB_TOKEN)" || { echo "GITHUB_TOKEN is required"; exit 1; }
+	@test -d "$(RELEASE_DIR)" || { echo "Release directory not found"; exit 1; }
+	@curl -fsSL "https://github.com/tcnksm/ghr/releases/download/v0.17.0/ghr_v0.17.0_linux_amd64.tar.gz" -O || { echo "Failed to download ghr"; exit 1; }
+	@tar --strip-components=1 -xvf "ghr_v0.17.0_linux_amd64.tar.gz" "ghr_v0.17.0_linux_amd64/ghr" || { echo "Failed to extract ghr"; exit 1; }
+	@rm -f "ghr_v0.17.0_linux_amd64.tar.gz"
+	@chmod +x ./ghr
+	@./ghr -replace -recreate -token $(GITHUB_TOKEN) $(GITVERSION) $(RELEASE_DIR)/ || { echo "Failed to create release"; exit 1; }
+	@test -n "$$(ls $(RELEASE_DIR)/*.tar.gz 2>/dev/null)" || { echo "No tar.gz files found for checksum"; exit 1; }
+	@$(SHASUM) $(RELEASE_DIR)/*.tar.gz > $(RELEASE_DIR)/SHA1SUM || { echo "Failed to generate checksums"; exit 1; }
+
+release-only: check-tools
+	@echo "Creating release..."
+	@test -n "$(GITHUB_TOKEN)" || { echo "GITHUB_TOKEN is required"; exit 1; }
+	@test -d "$(RELEASE_DIR)" || { echo "Release directory not found"; exit 1; }
+	@curl -fsSL "https://github.com/tcnksm/ghr/releases/download/v0.17.0/ghr_v0.17.0_linux_amd64.tar.gz" -O || { echo "Failed to download ghr"; exit 1; }
+	@tar --strip-components=1 -xvf "ghr_v0.17.0_linux_amd64.tar.gz" "ghr_v0.17.0_linux_amd64/ghr" || { echo "Failed to extract ghr"; exit 1; }
+	@rm -f "ghr_v0.17.0_linux_amd64.tar.gz"
+	@chmod +x ./ghr
+	@./ghr -replace -recreate -token $(GITHUB_TOKEN) $(GITVERSION) $(RELEASE_DIR)/ || { echo "Failed to create release"; exit 1; }
+	@test -n "$$(ls $(RELEASE_DIR)/*.tar.gz 2>/dev/null)" || { echo "No tar.gz files found for checksum"; exit 1; }
+	@$(SHASUM) $(RELEASE_DIR)/*.tar.gz > $(RELEASE_DIR)/SHA1SUM || { echo "Failed to generate checksums"; exit 1; }
 	@rm -f ghr
-	@rm -f ghr_*.tar.gz
 
-release: GHR_VERSION := v0.17.0
-release:
-	@echo "Creating Releases..."
-	@if [ -z "$$GITHUB_TOKEN" ]; then \
-		echo "Error: GITHUB_TOKEN environment variable is required for releases."; \
-		echo "To build binaries locally without releasing, use 'make build' instead."; \
-		exit 1; \
-	fi
-	@if [ ! -f ghr ]; then \
-		echo "Downloading ghr..."; \
-		curl -fsSL https://github.com/tcnksm/ghr/releases/download/$(GHR_VERSION)/ghr_$(GHR_VERSION)_linux_amd64.tar.gz -o ghr_$(GHR_VERSION)_linux_amd64.tar.gz && \
-		tar --strip-components=1 -xf ghr_$(GHR_VERSION)_linux_amd64.tar.gz ghr_$(GHR_VERSION)_linux_amd64/ghr; \
-	fi
-	@./ghr -version
-	@./ghr -replace -recreate -token $$GITHUB_TOKEN $(GITVERSION) releases/$(GITVERSION)/
-	@if command -v sha256sum >/dev/null 2>&1; then \
-		sha256sum releases/$(GITVERSION)/*.tar.gz > releases/$(GITVERSION)/SHA256SUM; \
-	elif command -v shasum >/dev/null 2>&1; then \
-		shasum -a 256 releases/$(GITVERSION)/*.tar.gz > releases/$(GITVERSION)/SHA256SUM; \
-	else \
-		echo "Warning: No SHA256 tool found, skipping checksum generation"; \
-	fi
-
-all: staticcheck test clean build
+all: staticcheck dependency clean build
