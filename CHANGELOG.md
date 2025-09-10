@@ -1,5 +1,10 @@
 <!-- markdownlint-disable -->
 
+# v1.2.0 / 2025-09-10
+
+* Built with golang 1.25
+* Dependencies update
+
 # v1.1.0 / 2025-08-18
 
 * Enhanced error handling with more descriptive messages
