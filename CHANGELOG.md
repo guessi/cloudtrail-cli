@@ -1,5 +1,9 @@
 <!-- markdownlint-disable -->
 
+# v1.3.0 / 2025-11-29
+
+* Dependencies update
+
 # v1.2.0 / 2025-09-10
 
 * Built with golang 1.25
