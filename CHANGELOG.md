@@ -1,5 +1,11 @@
 <!-- markdownlint-disable -->
 
+# v1.5.0 / 2026-03-28
+
+* Validate filter inputs and propagate errors through the call chain
+* Build with golang 1.25.8
+* Dependencies update
+
 # v1.4.0 / 2026-02-07
 
 * Dependencies update
