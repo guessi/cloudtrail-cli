@@ -1,6 +1,8 @@
 module github.com/guessi/cloudtrail-cli
 
-go 1.25
+go 1.25.0
+
+toolchain go1.25.8
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.41.5
