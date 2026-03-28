@@ -275,9 +275,10 @@ func TestGetBatchSize(t *testing.T) {
 
 func TestBuildLookupAttributes(t *testing.T) {
 	testCases := []struct {
-		name     string
-		input    types.CloudTrailCliInput
-		expected int
+		name        string
+		input       types.CloudTrailCliInput
+		expected    int
+		expectError bool
 	}{
 		{
 			name:     "No filters",
@@ -292,19 +293,49 @@ func TestBuildLookupAttributes(t *testing.T) {
 			expected: 1,
 		},
 		{
-			name: "Multiple filters",
+			name: "Multiple filters returns error",
 			input: types.CloudTrailCliInput{
 				EventName: "GetObject",
 				UserName:  "testuser",
 			},
-			expected: 2,
+			expectError: true,
+		},
+		{
+			name: "Invalid event source returns error",
+			input: types.CloudTrailCliInput{
+				EventSource: "invalid",
+			},
+			expectError: true,
+		},
+		{
+			name: "Invalid event ID returns error",
+			input: types.CloudTrailCliInput{
+				EventId: "not-a-uuid",
+			},
+			expectError: true,
+		},
+		{
+			name: "Invalid access key ID returns error",
+			input: types.CloudTrailCliInput{
+				AccessKeyId: "bad",
+			},
+			expectError: true,
 		},
 	}
 
 	for _, testCase := range testCases {
 		tc := testCase
 		t.Run(tc.name, func(t *testing.T) {
-			got := buildLookupAttributes(tc.input)
+			got, err := buildLookupAttributes(tc.input)
+			if tc.expectError {
+				if err == nil {
+					t.Error("expected error, got nil")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
 			if len(got) != tc.expected {
 				t.Errorf("buildLookupAttributes() returned %d filters, want %d", len(got), tc.expected)
 			}

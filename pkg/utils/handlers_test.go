@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	ctypes "github.com/aws/aws-sdk-go-v2/service/cloudtrail/types"
+	"github.com/guessi/cloudtrail-cli/pkg/constants"
 	"github.com/guessi/cloudtrail-cli/pkg/types"
 )
 
@@ -34,6 +35,13 @@ func TestValidateInput(t *testing.T) {
 			"Invalid input with negative max results",
 			types.CloudTrailCliInput{
 				MaxResults: -1,
+			},
+			true,
+		},
+		{
+			"Invalid input exceeding max limit",
+			types.CloudTrailCliInput{
+				MaxResults: constants.MaxCloudTrailResults + 1,
 			},
 			true,
 		},
@@ -71,7 +79,10 @@ func TestBuildCloudTrailInput(t *testing.T) {
 		StartTime:  startTime,
 		EndTime:    endTime,
 	}
-	result := buildCloudTrailInput(input)
+	result, err := buildCloudTrailInput(input)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
 	if result.MaxResults == nil || *result.MaxResults != int32(10) {
 		t.Errorf("MaxResults = %v, want 10", result.MaxResults)

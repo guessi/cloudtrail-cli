@@ -125,13 +125,17 @@ func renderTable(rows []table.Row) {
 }
 
 // buildCloudTrailInput creates the CloudTrail API request input
-func buildCloudTrailInput(i types.CloudTrailCliInput) *cloudtrail.LookupEventsInput {
+func buildCloudTrailInput(i types.CloudTrailCliInput) (*cloudtrail.LookupEventsInput, error) {
+	attrs, err := buildLookupAttributes(i)
+	if err != nil {
+		return nil, err
+	}
 	return &cloudtrail.LookupEventsInput{
 		StartTime:        &i.StartTime,
 		EndTime:          &i.EndTime,
-		LookupAttributes: buildLookupAttributes(i),
+		LookupAttributes: attrs,
 		MaxResults:       getBatchSize(i.MaxResults),
-	}
+	}, nil
 }
 
 // LookupEventsFunc type for dependency injection
@@ -160,7 +164,10 @@ func eventsHandlerWithLookup(i types.CloudTrailCliInput, lookupFunc LookupEvents
 	}
 
 	// Build CloudTrail API request
-	input := buildCloudTrailInput(i)
+	input, err := buildCloudTrailInput(i)
+	if err != nil {
+		return err
+	}
 
 	// Retrieve events from CloudTrail
 	events, err := lookupFunc(ctx, svc, input, i.MaxResults)

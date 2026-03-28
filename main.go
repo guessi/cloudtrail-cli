@@ -27,8 +27,7 @@ func main() {
 		Version: constants.GitVersion,
 		Flags:   cmd.Flags,
 		Action: func(ctx context.Context, c *cli.Command) error {
-			cmd.Wrapper(c)
-			return nil
+			return cmd.Wrapper(c)
 		},
 		Commands: []*cli.Command{
 			{

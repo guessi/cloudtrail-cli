@@ -6,7 +6,7 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-func Wrapper(c *cli.Command) {
+func Wrapper(c *cli.Command) error {
 	var isReadOnlyFlagSet bool
 	if c.IsSet("read-only") {
 		isReadOnlyFlagSet = true
@@ -32,5 +32,5 @@ func Wrapper(c *cli.Command) {
 		TruncateUserAgent: c.Bool("truncate-user-agent"),
 	}
 
-	utils.EventsHandler(cloudTrailCliInput)
+	return utils.EventsHandler(cloudTrailCliInput)
 }

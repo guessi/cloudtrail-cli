@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -117,12 +118,16 @@ func LookupEventsWithPaginator(ctx context.Context, paginator CloudTrailPaginato
 	return events, nil
 }
 
-// buildLookupAttributes constructs CloudTrail API filters from user input
-func buildLookupAttributes(input types.CloudTrailCliInput) []ctypes.LookupAttribute {
+// buildLookupAttributes constructs CloudTrail API filters from user input.
+// Returns an error if multiple filters are specified (AWS API limitation)
+// or if a filter value is invalid.
+func buildLookupAttributes(input types.CloudTrailCliInput) ([]ctypes.LookupAttribute, error) {
 	var attributes []ctypes.LookupAttribute
 
-	// Add filters only for non-empty, valid inputs
-	if isValidUUID(input.EventId) {
+	if input.EventId != "" {
+		if !isValidUUID(input.EventId) {
+			return nil, fmt.Errorf("invalid event ID format: must be a valid UUID")
+		}
 		attributes = append(attributes, ctypes.LookupAttribute{
 			AttributeKey:   ctypes.LookupAttributeKeyEventId,
 			AttributeValue: aws.String(input.EventId),
@@ -164,19 +169,29 @@ func buildLookupAttributes(input types.CloudTrailCliInput) []ctypes.LookupAttrib
 		})
 	}
 
-	if isValidEventSource(input.EventSource) {
+	if input.EventSource != "" {
+		if !isValidEventSource(input.EventSource) {
+			return nil, fmt.Errorf("invalid event source %q: must end with %s", input.EventSource, constants.AWSServiceSuffix)
+		}
 		attributes = append(attributes, ctypes.LookupAttribute{
 			AttributeKey:   ctypes.LookupAttributeKeyEventSource,
 			AttributeValue: aws.String(input.EventSource),
 		})
 	}
 
-	if isValidAccessKeyID(input.AccessKeyId) {
+	if input.AccessKeyId != "" {
+		if !isValidAccessKeyID(input.AccessKeyId) {
+			return nil, fmt.Errorf("invalid access key ID format: must be 20 characters starting with AKIA or ASIA")
+		}
 		attributes = append(attributes, ctypes.LookupAttribute{
 			AttributeKey:   ctypes.LookupAttributeKeyAccessKeyId,
 			AttributeValue: aws.String(input.AccessKeyId),
 		})
 	}
 
-	return attributes
+	if len(attributes) > 1 {
+		return nil, fmt.Errorf("only one event filter can be used at a time (AWS API limitation), but %d were specified", len(attributes))
+	}
+
+	return attributes, nil
 }
