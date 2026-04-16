@@ -22,7 +22,7 @@ jobs:
         go-version-file: "go.mod"
 
     - name: Cache Go modules and build cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ~/go/pkg/mod
@@ -46,7 +46,7 @@ jobs:
         go-version-file: "go.mod"
 
     - name: Cache Go modules and build cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ~/go/pkg/mod
@@ -70,7 +70,7 @@ jobs:
         go-version-file: "go.mod"
 
     - name: Cache Go modules and build cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ~/go/pkg/mod
@@ -83,7 +83,7 @@ jobs:
       run: make build-parallel
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: binaries-all
         path: releases/

@@ -99,9 +99,9 @@ release: check-tools build-parallel
 	@echo "Creating release..."
 	@test -n "$(GITHUB_TOKEN)" || { echo "GITHUB_TOKEN is required"; exit 1; }
 	@test -d "$(RELEASE_DIR)" || { echo "Release directory not found"; exit 1; }
-	@curl -fsSL "https://github.com/tcnksm/ghr/releases/download/v0.17.0/ghr_v0.17.0_linux_amd64.tar.gz" -O || { echo "Failed to download ghr"; exit 1; }
-	@tar --strip-components=1 -xvf "ghr_v0.17.0_linux_amd64.tar.gz" "ghr_v0.17.0_linux_amd64/ghr" || { echo "Failed to extract ghr"; exit 1; }
-	@rm -f "ghr_v0.17.0_linux_amd64.tar.gz"
+	@curl -fsSL "https://github.com/tcnksm/ghr/releases/download/v0.18.3/ghr_v0.18.3_linux_amd64.tar.gz" -O || { echo "Failed to download ghr"; exit 1; }
+	@tar --strip-components=1 -xvf "ghr_v0.18.3_linux_amd64.tar.gz" "ghr_v0.18.3_linux_amd64/ghr" || { echo "Failed to extract ghr"; exit 1; }
+	@rm -f "ghr_v0.18.3_linux_amd64.tar.gz"
 	@chmod +x ./ghr
 	@./ghr -replace -recreate -token $(GITHUB_TOKEN) $(GITVERSION) $(RELEASE_DIR)/ || { echo "Failed to create release"; exit 1; }
 	@test -n "$$(ls $(RELEASE_DIR)/*.tar.gz 2>/dev/null)" || { echo "No tar.gz files found for checksum"; exit 1; }
@@ -111,9 +111,9 @@ release-only: check-tools
 	@echo "Creating release..."
 	@test -n "$(GITHUB_TOKEN)" || { echo "GITHUB_TOKEN is required"; exit 1; }
 	@test -d "$(RELEASE_DIR)" || { echo "Release directory not found"; exit 1; }
-	@curl -fsSL "https://github.com/tcnksm/ghr/releases/download/v0.17.0/ghr_v0.17.0_linux_amd64.tar.gz" -O || { echo "Failed to download ghr"; exit 1; }
-	@tar --strip-components=1 -xvf "ghr_v0.17.0_linux_amd64.tar.gz" "ghr_v0.17.0_linux_amd64/ghr" || { echo "Failed to extract ghr"; exit 1; }
-	@rm -f "ghr_v0.17.0_linux_amd64.tar.gz"
+	@curl -fsSL "https://github.com/tcnksm/ghr/releases/download/v0.18.3/ghr_v0.18.3_linux_amd64.tar.gz" -O || { echo "Failed to download ghr"; exit 1; }
+	@tar --strip-components=1 -xvf "ghr_v0.18.3_linux_amd64.tar.gz" "ghr_v0.18.3_linux_amd64/ghr" || { echo "Failed to extract ghr"; exit 1; }
+	@rm -f "ghr_v0.18.3_linux_amd64.tar.gz"
 	@chmod +x ./ghr
 	@./ghr -replace -recreate -token $(GITHUB_TOKEN) $(GITVERSION) $(RELEASE_DIR)/ || { echo "Failed to create release"; exit 1; }
 	@test -n "$$(ls $(RELEASE_DIR)/*.tar.gz 2>/dev/null)" || { echo "No tar.gz files found for checksum"; exit 1; }
