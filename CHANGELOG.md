@@ -1,5 +1,10 @@
 <!-- markdownlint-disable -->
 
+# v1.7.0 / 2026-06-04
+
+* Build with golang 1.26.4
+* Dependencies update
+
 # v1.6.0 / 2026-05-14
 
 * Build with golang 1.25.10
