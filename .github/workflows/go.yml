@@ -14,15 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Set up Go
-      uses: actions/setup-go@v6
+      uses: actions/setup-go@v7
       with:
         go-version-file: "go.mod"
 
     - name: Cache Go modules and build cache
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: |
           ~/go/pkg/mod
@@ -38,15 +38,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Set up Go
-      uses: actions/setup-go@v6
+      uses: actions/setup-go@v7
       with:
         go-version-file: "go.mod"
 
     - name: Cache Go modules and build cache
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: |
           ~/go/pkg/mod
@@ -62,15 +62,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Set up Go
-      uses: actions/setup-go@v6
+      uses: actions/setup-go@v7
       with:
         go-version-file: "go.mod"
 
     - name: Cache Go modules and build cache
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: |
           ~/go/pkg/mod
@@ -95,10 +95,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Download all artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         path: releases/
         merge-multiple: true
